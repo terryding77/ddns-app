@@ -1,0 +1,16 @@
+{
+    "comment" : [
+    "1) complete variables setting and rename this file as aliyun.json",
+    "2) ensure this file is in .gitignore to keep your aliyun account safety."
+    "PS: REQUEST_METHOD is case sensitive!"
+    ],
+
+    "ALIYUN_ACCESS_KEY_ID" : "your access key id",
+    "ALIYUN_ACCESS_KEY_SECRET" : "your access key secret",
+    "ALIYUN_DOMAIN_NAME_DICT" : {
+        "example.domain1" : "prefix1,prefix2",
+        "example.domain2" : "@,ftp,m,blog",
+        "example.domain3" : "www"
+    },
+    "REQUEST_METHOD" : "POST or GET",
+}
