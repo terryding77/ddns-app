@@ -5,12 +5,14 @@ import alidns
 
 def get_local_ip():
     try:
-        ip = requests.get('http://ipinfo.io/json').json()['ip']
+        #ip = requests.get('http://ipinfo.io/json').json()['ip']
+        ip = requests.get('http://members.3322.org/dyndns/getip').text.strip()
     except Exception as e:
         print(e)
         print('[MESSAGE] retry in 10 seconds')
         time.sleep(10)
         return get_local_ip()
+    print(ip)
     return ip
 
 def work():
