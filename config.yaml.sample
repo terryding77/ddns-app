@@ -1,0 +1,13 @@
+dnsserver:
+  name: aliyun # choose from [aliyun namecheap]
+  accesskey: your access key for dns server
+  secret: your access secret for dns server
+
+dnsrecord:  # " below can avoid unnecessary format problem
+  - ["bc", "dingtianyu.xyz"]  # means bc.dingtianyu.xyz
+  - ["bcd", "dingtianyu.xyz"] # means bcd.dingtianyu.xyz
+  - ["@", "dingtianyu.xyz"] # means dingtianyu.xyz
+
+log:
+  fmt: "%(filename)s %(lineno)s %(levelname)s - %(message)s"
+  level: DEBUG

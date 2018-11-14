@@ -1,31 +1,38 @@
 #! /usr/bin/env python3
 import time
-import requests
-import alidns
+import logging
+import yaml
+
+import local_ip
+import dnsserver
 
 
-def get_local_ip():
-    try:
-        #ip = requests.get('http://ipinfo.io/json').json()['ip']
-        ip = requests.get('http://members.3322.org/dyndns/getip').text.strip()
-    except Exception as e:
-        print(e)
-        print('[MESSAGE] retry in 10 seconds')
-        time.sleep(10)
-        return get_local_ip()
-    print(ip)
-    return ip
+def get_config(filename='./config.yaml'):
+    with open(filename) as f:
+        return yaml.load(f)
 
 
-def work():
-    local_ip = get_local_ip()
-    alidns.refresh_cnf()
-    for domain_name, registered_ip, prefix, record_id in alidns.get_dns_list():
-        if local_ip != registered_ip:
-            alidns.update_dns(domain_name, local_ip, prefix, record_id)
+def work(dns_manager: dnsserver.DNSServer, cnf: dict):
+    ip = local_ip.get_local_ip()
+    logging.info(ip)
+    dns_manager.clear()
+    logging.debug(cnf.get('dnsrecord', []))
+    dns_manager.add_dns_record(cnf.get('dnsrecord', []))
+    dns_manager.update_address(ip)
 
 
 if __name__ == '__main__':
+    cnf = get_config()
+    log_cnf = cnf.get('log', {})
+    log_level = logging.getLevelName(str.upper(log_cnf.get('level', '')))
+    logging.basicConfig(
+        level=log_level,
+        format=log_cnf.get('fmt', ''),
+    )
+    dnsserver_cnf = cnf.get('dnsserver', {})
+    dnsserver_name = dnsserver_cnf['name']
+    dns_manager = dnsserver.servers[dnsserver_name](dnsserver_cnf)
     while True:
-        work()
+        cnf = get_config()
+        work(dns_manager, cnf)
         time.sleep(60 * 15)
